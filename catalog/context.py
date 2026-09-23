@@ -4,7 +4,8 @@ from django.templatetags.static import static
 from urllib.parse import urljoin
 
 def store_settings(request):
-    return {'store': StoreSettings.objects.filter(pk=1).first() or StoreSettings()}
+    return {'store': StoreSettings.objects.filter(pk=1).first() or StoreSettings(),
+            'review_mode': settings.REVIEW_MODE}
 
 
 PUBLIC_PAGE_TITLES = {

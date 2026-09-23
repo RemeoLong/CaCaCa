@@ -237,3 +237,4 @@ body > footer .footer-bottom { border-color: #4a6a6d; }
   body, .owner-app { background: #fff; }
   .receipt { box-shadow: none; }
 }
+.owner-review-banner{margin:1rem auto 0;max-width:1440px;padding:.85rem 1.2rem;background:#eaf2ed;border:1px solid #b4c9bd;color:#12382b;font-size:.95rem}

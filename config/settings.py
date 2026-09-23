@@ -40,7 +40,7 @@ MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware', 'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware', 'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware', 'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'config.middleware.OwnerNoStoreMiddleware',
+    'config.middleware.OwnerReviewReadOnlyMiddleware', 'config.middleware.OwnerNoStoreMiddleware',
 ]
 ROOT_URLCONF = 'config.urls'
 TEMPLATES = [{'BACKEND': 'django.template.backends.django.DjangoTemplates', 'DIRS': [BASE_DIR / 'templates'],
@@ -65,6 +65,7 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_DIRS = [BASE_DIR / 'static']
 # A temporary view-only review can serve the supplied photos as immutable static assets.
 REVIEW_MODE = os.getenv('CACACA_REVIEW_MODE', 'false').lower() == 'true'
+OWNER_SETUP_CODE_HASH = os.getenv('CACACA_OWNER_SETUP_CODE_HASH', '') if REVIEW_MODE else ''
 if REVIEW_MODE:
     STATICFILES_DIRS.append(('review-media', BASE_DIR / 'Pictures'))
 MEDIA_URL = os.getenv('MEDIA_URL', '/static/review-media/' if REVIEW_MODE else '/media/')

@@ -1,6 +1,7 @@
 import copy
 import json
 import uuid
+from hashlib import sha256
 from io import BytesIO
 from tempfile import TemporaryDirectory
 from concurrent.futures import ThreadPoolExecutor
@@ -21,6 +22,38 @@ from . import fulfillment, notifications, paypal, reporting, services
 from .cart import CheckoutError, quote
 from .forms import CheckoutForm
 from .models import BusinessExpense, NotificationLog, Order, PaymentEvent, Refund
+
+
+@override_settings(REVIEW_MODE=True, OWNER_SETUP_CODE_HASH=sha256(b'one-time-test-code').hexdigest())
+class OwnerReviewSetupTests(TestCase):
+    def test_one_time_claim_creates_owner_and_opens_dashboard(self):
+        url = reverse('owner_setup')
+        self.assertEqual(self.client.get(url).status_code, 200)
+        details = {'username': 'reviewowner', 'email': 'owner@example.com',
+                   'setup_code': 'one-time-test-code', 'password1': 'StrongReviewPass#9026',
+                   'password2': 'StrongReviewPass#9026'}
+        wrong = {**details, 'setup_code': 'wrong'}
+        self.assertContains(self.client.post(url, wrong), 'not correct')
+        self.assertFalse(get_user_model().objects.exists())
+        response = self.client.post(url, details)
+        self.assertRedirects(response, reverse('owner_dashboard'))
+        owner = get_user_model().objects.get(username='reviewowner')
+        self.assertTrue(owner.is_staff and owner.is_superuser)
+        self.assertContains(self.client.get(reverse('owner_dashboard')), 'Owner review copy')
+        self.assertEqual(self.client.get(url).status_code, 404)
+
+    def test_review_prevents_owner_edits(self):
+        owner = get_user_model().objects.create_superuser(
+            'reviewowner', 'owner@example.com', 'StrongReviewPass#9026')
+        self.client.force_login(owner)
+        self.assertEqual(self.client.get(reverse('owner_rod_add')).status_code, 200)
+        response = self.client.post(reverse('owner_rod_add'), {'name': 'Should not save'})
+        self.assertEqual(response.status_code, 403)
+        self.assertFalse(Product.objects.exists())
+
+    @override_settings(OWNER_SETUP_CODE_HASH='')
+    def test_setup_is_closed_without_code(self):
+        self.assertEqual(self.client.get(reverse('owner_setup')).status_code, 404)
 
 PAYPAL_SETTINGS = {'PAYPAL_CLIENT_ID':'test-client', 'PAYPAL_CLIENT_SECRET':'test-secret',
     'PAYPAL_WEBHOOK_ID':'test-webhook', 'PAYPAL_MERCHANT_ID':'MERCHANT123'}

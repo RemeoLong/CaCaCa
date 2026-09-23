@@ -1,0 +1,10 @@
+{% extends 'base.html' %}{% block title %}Set up owner access | CáCáCá{% endblock %}{% block content %}
+<section class="owner-heading"><div><p class="eyebrow">CÁCÁCÁ OWNER REVIEW</p><h1>Set up your sign-in.</h1><p>Choose a username and password for this temporary review site. Use the one-time setup code provided by the site administrator.</p></div></section>
+<section class="owner-shell owner-form-shell"><form method="post" class="owner-rod-form" autocomplete="off">{% csrf_token %}
+  <section class="owner-card"><h2>Owner account</h2><p>This account opens the owner dashboard. Keep the setup code and password private.</p>
+    {% if form.non_field_errors %}<div class="form-errors">{{ form.non_field_errors }}</div>{% endif %}
+    <div class="owner-form-grid"><div>{{ form.username.label_tag }}{{ form.username }}{{ form.username.errors }}</div><div>{{ form.email.label_tag }}{{ form.email }}{{ form.email.errors }}</div><div>{{ form.setup_code.label_tag }}{{ form.setup_code }}{{ form.setup_code.errors }}</div><div>{{ form.password1.label_tag }}{{ form.password1 }}{{ form.password1.errors }}</div><div>{{ form.password2.label_tag }}{{ form.password2 }}{{ form.password2.errors }}</div></div>
+    <p>{{ form.password1.help_text }}</p><button class="button" type="submit">Create owner sign-in</button>
+  </section>
+</form></section>
+{% endblock %}
