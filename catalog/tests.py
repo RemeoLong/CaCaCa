@@ -1,5 +1,6 @@
 from decimal import Decimal
 from io import BytesIO
+from io import StringIO
 from pathlib import Path
 from tempfile import TemporaryDirectory
 from xml.etree import ElementTree
@@ -7,6 +8,7 @@ from xml.etree import ElementTree
 from PIL import Image
 from django.contrib.auth import get_user_model
 from django.core import mail
+from django.core.management import call_command
 from django.core.exceptions import ValidationError
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.db import IntegrityError, transaction
@@ -14,6 +16,22 @@ from django.test import TestCase, override_settings
 from django.urls import reverse
 from .forms import CustomBuildForm
 from .models import Product, RodSpecification, Species, StoreSettings, CustomBuildRequest, ProductImage, DesignTheme
+
+
+class ReviewInventorySeedTests(TestCase):
+    @override_settings(REVIEW_MODE=True, MEDIA_URL='/static/review-media/')
+    def test_seed_is_repeatable_and_review_photos_have_static_urls(self):
+        for _ in range(2):
+            call_command('seed_review_inventory', stdout=StringIO())
+        self.assertEqual(Product.objects.filter(item_type=Product.ItemType.ROD).count(), 4)
+        self.assertEqual(Product.objects.filter(item_type=Product.ItemType.TACKLE).count(), 3)
+        self.assertEqual(ProductImage.objects.count(), 18)
+        self.assertEqual(Product.objects.filter(status=Product.Status.DRAFT, show_in_gallery=True).count(), 3)
+        self.assertEqual(Product.objects.filter(is_published=True).count(), 4)
+        self.assertEqual(Product.objects.get(rod_id='CAC-PHOTO-004').price, Decimal('900.00'))
+        self.assertTrue(ProductImage.objects.first().image.url.startswith('/static/review-media/'))
+        self.assertContains(self.client.get('/shop/'), 'Red, White &amp; Blue Diamond Wrap')
+        self.assertContains(self.client.get('/tackle/'), 'Pink Squid Rig')
 
 
 class CatalogTests(TestCase):

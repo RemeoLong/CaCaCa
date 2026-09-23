@@ -63,7 +63,11 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_DIRS = [BASE_DIR / 'static']
-MEDIA_URL = os.getenv('MEDIA_URL', '/media/')
+# A temporary view-only review can serve the supplied photos as immutable static assets.
+REVIEW_MODE = os.getenv('CACACA_REVIEW_MODE', 'false').lower() == 'true'
+if REVIEW_MODE:
+    STATICFILES_DIRS.append(('review-media', BASE_DIR / 'Pictures'))
+MEDIA_URL = os.getenv('MEDIA_URL', '/static/review-media/' if REVIEW_MODE else '/media/')
 MEDIA_ROOT = BASE_DIR / 'media'
 STORAGES = {
     'default': {'BACKEND': os.getenv('MEDIA_STORAGE_BACKEND', 'django.core.files.storage.FileSystemStorage'),
