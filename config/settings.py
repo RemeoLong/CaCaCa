@@ -21,6 +21,9 @@ if not SECRET_KEY:
         raise ImproperlyConfigured('DJANGO_SECRET_KEY is required outside local development.')
     SECRET_KEY = 'local-development-only-not-for-production-cacaca'
 ALLOWED_HOSTS = [h.strip() for h in os.getenv('DJANGO_ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',') if h.strip()]
+RENDER_HOSTNAME = os.getenv('RENDER_EXTERNAL_HOSTNAME', '').strip() if os.getenv('RENDER') == 'true' else ''
+if RENDER_HOSTNAME and RENDER_HOSTNAME not in ALLOWED_HOSTS:
+    ALLOWED_HOSTS.append(RENDER_HOSTNAME)
 DATABASE_URL = os.getenv('DATABASE_URL', '')
 if not DEBUG and not DATABASE_URL.startswith(('postgres://', 'postgresql://')):
     raise ImproperlyConfigured('A PostgreSQL DATABASE_URL is required in production.')
@@ -79,6 +82,10 @@ SECURE_HSTS_SECONDS = 31536000 if not DEBUG else 0
 SECURE_CONTENT_TYPE_NOSNIFF = True
 X_FRAME_OPTIONS = 'DENY'
 CSRF_TRUSTED_ORIGINS = [s for s in os.getenv('CSRF_TRUSTED_ORIGINS', '').split(',') if s]
+if RENDER_HOSTNAME:
+    render_origin = f'https://{RENDER_HOSTNAME}'
+    if render_origin not in CSRF_TRUSTED_ORIGINS:
+        CSRF_TRUSTED_ORIGINS.append(render_origin)
 EMAIL_BACKEND = os.getenv('EMAIL_BACKEND', 'django.core.mail.backends.console.EmailBackend')
 DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL', 'website@localhost')
 EMAIL_HOST = os.getenv('EMAIL_HOST', 'localhost')
@@ -94,7 +101,8 @@ PAYPAL_WEBHOOK_ID = os.getenv('PAYPAL_WEBHOOK_ID', '')
 PAYPAL_MERCHANT_ID = os.getenv('PAYPAL_MERCHANT_ID', '')
 # This milestone intentionally supports sandbox only. Live payments require the launch review.
 PAYPAL_API_BASE = 'https://api-m.sandbox.paypal.com'
-PUBLIC_BASE_URL = os.getenv('PUBLIC_BASE_URL', 'http://127.0.0.1:8000').rstrip('/')
+PUBLIC_BASE_URL = (os.getenv('PUBLIC_BASE_URL') or
+                   (f'https://{RENDER_HOSTNAME}' if RENDER_HOSTNAME else 'http://127.0.0.1:8000')).rstrip('/')
 SITE_INDEXABLE = os.getenv('SITE_INDEXABLE', 'false').lower() == 'true'
 RESERVATION_MINUTES = 20
 SECURE_REFERRER_POLICY = 'same-origin'
