@@ -1,0 +1,55 @@
+{% load static %}<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}CaCaCa | Hand-wrapped fishing rods{% endblock %}</title>
+  <meta name="description" content="{% block description %}Shop finished CaCaCa fishing rods with hand-wrapped designs. Explore wrap photos, specifications, and available rods.{% endblock %}">
+  {% if not seo_indexable %}<meta name="robots" content="noindex, nofollow">{% endif %}
+  {% if seo_canonical %}<link rel="canonical" href="{{ seo_canonical }}">{% endif %}
+  {% if seo_indexable %}<meta property="og:type" content="website">
+  <meta property="og:site_name" content="CaCaCa">
+  <meta property="og:title" content="{{ seo_title }}">
+  <meta property="og:description" content="{{ seo_description|default:'Shop finished CaCaCa fishing rods with hand-wrapped designs. Explore wrap photos, specifications, and available rods.' }}">
+  <meta property="og:url" content="{{ seo_canonical }}">
+  {% if seo_image %}<meta property="og:image" content="{{ seo_image }}">{% endif %}
+  <meta name="twitter:card" content="summary_large_image">{% endif %}
+  <link rel="icon" href="{% static 'brand/favicon.svg' %}" type="image/svg+xml">
+  {% if request.path|slice:':7' == '/owner/' %}<link rel="manifest" href="{% url 'owner_manifest' %}">
+  <link rel="apple-touch-icon" href="{% static 'brand/owner-app-apple-touch.png' %}">
+  <meta name="theme-color" content="#082d3f">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="CaCaCa Owner">{% endif %}
+  <link rel="stylesheet" href="{% static 'css/site.css' %}?v=20260922-2">
+  <link rel="stylesheet" href="{% static 'css/fulfillment.css' %}?v=20260923-1">
+  <link rel="stylesheet" href="{% static 'css/dense-theme.css' %}?v=20260923-7">
+</head>
+<body{% if request.path|slice:':7' == '/owner/' %} class="owner-app"{% endif %}>
+  <a class="skip-link" href="#main">Skip to content</a>
+  {% if request.path|slice:':7' == '/owner/' %}
+  <header class="site-header owner-site-header"><a class="wordmark" href="{% url 'owner_dashboard' %}" aria-label="CáCáCá owner home">Cá<span>Cá</span>Cá<small>OWNER WORKSPACE</small></a><a class="text-link" href="{% url 'home' %}" target="_blank" rel="noopener">View customer shop ↗</a></header>
+  {% else %}
+  <div class="announcement">HAND-WRAPPED FISHING RODS <span>FINISHED RODS. DISTINCTIVE DESIGNS.</span> <span>UNITED STATES · USD</span></div>
+  <header class="site-header">
+    <a class="wordmark" href="{% url 'home' %}" aria-label="CáCáCá home">Cá<span>Cá</span>Cá<small>CUSTOMIZED FISHING RODS</small></a>
+    <nav aria-label="Main navigation">
+      <a href="{% url 'shop' %}" {% if request.resolver_match.url_name == 'shop' %}aria-current="page"{% endif %}>Shop rods</a>
+      <a href="{% url 'tackle' %}" {% if request.resolver_match.url_name == 'tackle' or request.resolver_match.url_name == 'tackle_product' %}aria-current="page"{% endif %}>Tackle</a>
+      <a href="{% url 'salmon' %}" {% if request.resolver_match.url_name == 'salmon' %}aria-current="page"{% endif %}>Salmon rods</a>
+      <a href="{% url 'gallery' %}" {% if request.resolver_match.url_name == 'gallery' %}aria-current="page"{% endif %}>Gallery</a>
+      <a href="{% url 'about' %}">Our story</a>
+      <a href="{% url 'cart' %}">Cart ({{ cart_count }})</a>
+    </nav>
+    <a class="button button-small" href="{% url 'shop' %}">Browse rods <span aria-hidden="true">↗</span></a>
+  </header>
+  {% endif %}
+  <main id="main">{% if messages %}<div class="site-messages" role="status">{% for message in messages %}<p>{{ message }}</p>{% endfor %}</div>{% endif %}{% block content %}{% endblock %}</main>
+  {% if request.path|slice:':7' == '/owner/' %}<footer class="owner-footer"><div class="footer-bottom"><span>© {% now 'Y' %} CáCáCá owner workspace</span><a href="{% url 'home' %}" target="_blank" rel="noopener">View customer shop ↗</a></div></footer>{% else %}<footer>
+    <div class="footer-top"><div><a class="wordmark" href="{% url 'home' %}">CáCáCá</a><p>Hand-wrapped designs. Finished rods. Find yours.</p></div><div class="footer-links"><a href="{% url 'shop' %}">Shop rods</a><a href="{% url 'tackle' %}">Tackle</a><a href="{% url 'custom' %}">Special requests</a><a href="{% url 'faq' %}">FAQ</a><a href="{% url 'contact' %}">Contact</a><a href="{% url 'returns' %}">Returns</a></div></div>
+    <div class="footer-bottom"><span>© {% now 'Y' %} CaCaCa. Customized fishing rods.</span><span>United States shipping · Prices in USD</span><a href="{% if request.user.is_staff %}{% url 'owner_dashboard' %}{% else %}{% url 'admin:login' %}?next={% url 'owner_dashboard' %}{% endif %}">{% if request.user.is_staff %}Owner dashboard{% else %}Owner sign in{% endif %}</a></div>
+  </footer>
+  {% endif %}
+  {% block scripts %}{% endblock %}
+  {% if request.path|slice:':7' == '/owner/' %}<script src="{% static 'js/owner-pwa.js' %}?v=20260923-1" defer></script>{% endif %}
+</body>
+</html>
+

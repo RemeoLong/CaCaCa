@@ -1,0 +1,19 @@
+<nav class="owner-nav" aria-label="Owner tools">
+  <a href="{% url 'owner_dashboard' %}" {% if request.resolver_match.url_name == 'owner_dashboard' %}aria-current="page"{% endif %}>Home</a>
+  <a class="owner-nav-primary" href="{% url 'owner_rod_add' %}">＋ Add a rod</a>
+  <a href="{% url 'owner_inventory' %}" {% if request.resolver_match.url_name == 'owner_inventory' or request.resolver_match.url_name == 'owner_rod_edit' %}aria-current="page"{% endif %}>Rod inventory</a>
+  <a href="{% url 'owner_tackle' %}" {% if request.resolver_match.url_name == 'owner_tackle' or request.resolver_match.url_name == 'owner_tackle_edit' or request.resolver_match.url_name == 'owner_tackle_add' %}aria-current="page"{% endif %}>Tackle</a>
+  <a href="{% url 'owner_messages' %}" {% if request.resolver_match.url_name == 'owner_messages' or request.resolver_match.url_name == 'owner_message' %}aria-current="page"{% endif %}>Messages</a>
+  <a href="{% url 'owner_shipping' %}" {% if request.resolver_match.url_name == 'owner_shipping' or request.resolver_match.url_name == 'owner_order' %}aria-current="page"{% endif %}>Shipping</a>
+  <a href="{% url 'owner_inventory' %}#sold-rods">Sold rods</a>
+  <a href="{% url 'owner_reports' %}">Reports</a>
+  <a href="{% url 'owner_settings' %}" {% if request.resolver_match.url_name == 'owner_settings' %}aria-current="page"{% endif %}>Store settings</a>
+</nav>
+<nav class="owner-mobile-nav" aria-label="Owner mobile actions">
+  <a href="{% url 'owner_dashboard' %}" {% if request.resolver_match.url_name == 'owner_dashboard' %}aria-current="page"{% endif %}><span aria-hidden="true">⌂</span>Home</a>
+  <a href="{% url 'owner_rod_add' %}" {% if request.resolver_match.url_name == 'owner_rod_add' %}aria-current="page"{% endif %}><span aria-hidden="true">＋</span>Add rod</a>
+  <a href="{% url 'owner_inventory' %}" {% if request.resolver_match.url_name == 'owner_inventory' or request.resolver_match.url_name == 'owner_rod_edit' %}aria-current="page"{% endif %}><span aria-hidden="true">▤</span>Rods</a>
+  <a href="{% url 'owner_tackle' %}" {% if request.resolver_match.url_name == 'owner_tackle' or request.resolver_match.url_name == 'owner_tackle_edit' or request.resolver_match.url_name == 'owner_tackle_add' %}aria-current="page"{% endif %}><span aria-hidden="true">◈</span>Tackle</a>
+  <a href="{% url 'owner_shipping' %}" {% if request.resolver_match.url_name == 'owner_shipping' or request.resolver_match.url_name == 'owner_order' %}aria-current="page"{% endif %}><span aria-hidden="true">↗</span>Ship</a>
+  <a href="{% url 'owner_messages' %}" {% if request.resolver_match.url_name == 'owner_messages' or request.resolver_match.url_name == 'owner_message' %}aria-current="page"{% endif %}><span aria-hidden="true">✉</span>Messages</a>
+</nav>

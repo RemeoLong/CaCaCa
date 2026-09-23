@@ -1,0 +1,13 @@
+New paid order: {{ order.number }}
+
+Customer: {{ order.name }}
+Email: {{ order.email }}
+Total: ${{ order.total }} {{ order.currency }}
+{% for line in order.items.all %}Item: {{ line.name }} — {{ line.rod_id }}{% if line.serial_number %} — Serial {{ line.serial_number }}{% endif %}
+{% endfor %}
+Ship to:
+{{ order.address.address_line_1 }}{% if order.address.address_line_2 %}
+{{ order.address.address_line_2 }}{% endif %}
+{{ order.address.admin_area_2 }}, {{ order.address.admin_area_1 }} {{ order.address.postal_code }}
+
+Open the owner dashboard: {{ site_url }}{% url 'owner_order' order.pk %}

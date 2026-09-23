@@ -1,0 +1,4 @@
+{% extends "admin/base.html" %}
+{% block title %}{{ title }} | CáCáCá owner{% endblock %}
+{% block branding %}<div id="site-name"><a href="{% url 'owner_dashboard' %}">CáCáCá owner</a></div>{% endblock %}
+{% block nav-global %}<a href="{% url 'owner_dashboard' %}" style="color:var(--header-link-color);padding:0 12px">Workshop dashboard</a>{% endblock %}

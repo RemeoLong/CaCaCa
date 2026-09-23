@@ -1,0 +1,36 @@
+{% extends 'base.html' %}{% block title %}Store settings | CáCáCá owner{% endblock %}{% block content %}
+<section class="owner-order-heading"><div><p class="eyebrow">STORE SETTINGS</p><h1>Getting ready for a test sale</h1><p>Review the checkout amounts, order email, and PayPal test setup here.</p></div><div class="owner-actions"><a class="text-link" href="{% url 'owner_dashboard' %}">← Owner home</a></div></section>
+{% include 'owner/_nav.html' %}
+<section class="owner-shell owner-settings-shell">
+  <form method="post" class="owner-card owner-settings-form">{% csrf_token %}
+    {% if form.non_field_errors %}<div class="form-errors">{{ form.non_field_errors }}</div>{% endif %}
+    <h2>Checkout amounts</h2>
+    <div class="owner-form-grid">
+      <div>{{ form.shipping_rate.label_tag }}{{ form.shipping_rate }}{{ form.shipping_rate.errors }}<small>{{ form.shipping_rate.help_text }}</small></div>
+      <div>{{ form.shipping_mode.label_tag }}{{ form.shipping_mode }}{{ form.shipping_mode.errors }}</div>
+      <div>{{ form.tax_rate.label_tag }}{{ form.tax_rate }}{{ form.tax_rate.errors }}<small>{{ form.tax_rate.help_text }}</small></div>
+      <div>{{ form.contact_email.label_tag }}{{ form.contact_email }}{{ form.contact_email.errors }}<small>{{ form.contact_email.help_text }}</small></div>
+    </div>
+    <div class="owner-test-switch"><label>{{ form.checkout_enabled }} <span>{{ form.checkout_enabled.label }}</span></label>{{ form.checkout_enabled.errors }}<small>{{ form.checkout_enabled.help_text }}</small></div>
+    <button class="button" type="submit">Save settings</button>
+  </form>
+  <aside class="owner-help-card owner-checkout-status">
+    <h2>Test sale checklist</h2>
+    <p>{% if checkout_ready %}<strong>Sandbox checkout is open for testing.</strong>{% else %}<strong>Sandbox checkout is off.</strong>{% endif %} The PayPal connection is for test payments only; this site cannot take live payments yet.</p>
+    <ul class="owner-readiness-list">
+      <li><span>{% if available_item %}✓{% else %}○{% endif %}</span><div><strong>Item ready to sell</strong><small>{% if available_item %}At least one sellable listing exists.{% else %}Finish a rod or tackle listing first.{% endif %}</small></div></li>
+      <li><span>{% if checkout_checks.database and checkout_checks.shipping %}✓{% else %}○{% endif %}</span><div><strong>Database and shipping</strong><small>{% if checkout_checks.database and checkout_checks.shipping %}Ready for a test order.{% else %}The store setup needs attention.{% endif %}</small></div></li>
+      <li><span>{% if checkout_checks.paypal %}✓{% else %}○{% endif %}</span><div><strong>PayPal sandbox connection</strong><small>{% if checkout_checks.paypal %}Test credentials are connected.{% else %}A sandbox business account and app are still needed.{% endif %}</small></div></li>
+      <li><span>{% if checkout_checks.owner_switch %}✓{% else %}○{% endif %}</span><div><strong>Test checkout switch</strong><small>{% if checkout_checks.owner_switch %}Turned on.{% else %}Keep it off until the test connection is ready.{% endif %}</small></div></li>
+    </ul>
+    <p>To connect PayPal, start with its <a href="https://developer.paypal.com/api/get-started/" target="_blank" rel="noopener">official setup guide ↗</a>. A sandbox business account receives the test payment, and a sandbox personal account acts as the buyer. Keep the app secret out of chat and website forms.</p>
+    <p>Run a full test purchase with separate test inventory. A successful sandbox purchase updates its item stock, even though no real money changes hands.</p>
+    <h3>Before the full payment test</h3>
+    <ul class="owner-readiness-list">
+      <li><span>{% if public_https_url %}✓{% else %}○{% endif %}</span><div><strong>Public HTTPS test address</strong><small>{% if public_https_url %}Ready for webhook delivery.{% else %}Needed to test PayPal's payment notifications; localhost cannot receive them.{% endif %}</small></div></li>
+      <li><span>{% if store.contact_email %}✓{% else %}○{% endif %}</span><div><strong>Owner order email</strong><small>{% if store.contact_email %}Address entered; email delivery still needs testing.{% else %}Enter the address for new-order notices.{% endif %}</small></div></li>
+    </ul>
+    <h3>Before taking real orders</h3><p>{% if store.return_policy_published %}Return terms are published.{% else %}Return terms still need owner review and publication.{% endif %} Live PayPal, production email, hosting, and backups also need separate setup.</p>
+    <a class="text-link" href="{% url 'admin:catalog_storesettings_change' 1 %}">Advanced store settings</a>
+  </aside>
+</section>{% endblock %}

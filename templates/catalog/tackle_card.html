@@ -1,0 +1,7 @@
+<article class="tackle-card">
+  <a class="tackle-card-photo" data-sku="{{ item.rod_id }}" href="{{ item.get_absolute_url }}">
+    {% if item.cover %}<img src="{{ item.cover.image.url }}" alt="{{ item.cover.alt_text }}" loading="lazy" width="720" height="540">{% else %}<span>Photo coming soon</span>{% endif %}
+    <span class="badge">{% if item.is_available %}Available{% else %}Sold out{% endif %}</span>
+  </a>
+  <div class="tackle-card-body"><p class="eyebrow">PINK SQUID TACKLE · {{ item.rod_id }}</p><h3><a href="{{ item.get_absolute_url }}">{{ item.name }}</a></h3><p>{{ item.description|truncatechars:105 }}</p><div class="tackle-card-bottom"><strong>${{ item.price }} <small>USD</small></strong><a href="{{ item.get_absolute_url }}">View tackle ↗</a></div></div>
+</article>

@@ -1,0 +1,13 @@
+Your CaCaCa order has shipped.
+
+Order: {{ order.number }}
+Carrier: {% if order.carrier == 'other' %}{{ order.carrier_other }}{% else %}{{ order.get_carrier_display }}{% endif %}
+Tracking number: {{ order.tracking_number }}
+{% if order.tracking_url %}Track it: {{ order.tracking_url }}{% endif %}
+
+Shipping to:
+{{ order.address.address_line_1 }}{% if order.address.address_line_2 %}
+{{ order.address.address_line_2 }}{% endif %}
+{{ order.address.admin_area_2 }}, {{ order.address.admin_area_1 }} {{ order.address.postal_code }}
+
+CaCaCa

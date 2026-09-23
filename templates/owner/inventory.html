@@ -1,0 +1,8 @@
+{% extends 'base.html' %}{% block title %}Rod inventory | CáCáCá owner{% endblock %}{% block content %}
+<section class="owner-order-heading"><div><p class="eyebrow">ROD INVENTORY</p><h1>All rods</h1><p>Change a price or availability here. Open a rod to change its photos and description.</p></div><div class="owner-actions"><a class="button button-light" href="{% url 'owner_rod_add' %}">＋ Add a rod</a></div></section>
+{% include 'owner/_nav.html' %}
+<section class="owner-shell">
+  <div class="metric-grid owner-mini-summary"><article><span>For sale</span><strong>{{ available_count }}</strong></article><article><span>Public previews</span><strong>{{ preview_count }}</strong></article><article><span>Private drafts</span><strong>{{ draft_count }}</strong></article><article><span>Sold</span><strong>{{ sold_count }}</strong></article></div>
+  <section><div class="owner-section-title"><p class="eyebrow">ACTIVE INVENTORY</p><h2>For sale, previews, and drafts</h2></div><div class="inventory-list">{% for row in rows %}{% include 'owner/_inventory_row.html' %}{% empty %}<div class="owner-empty">No active rods yet. <a href="{% url 'owner_rod_add' %}">Add a rod.</a></div>{% endfor %}</div></section>
+  <section id="sold-rods" class="owner-section-block"><div class="owner-section-title"><p class="eyebrow">SALES HISTORY</p><h2>Sold rods</h2></div><div class="inventory-list">{% for row in sold_rows %}{% include 'owner/_inventory_row.html' %}{% empty %}<div class="owner-empty">No rods have sold yet.</div>{% endfor %}</div></section>
+</section>{% endblock %}

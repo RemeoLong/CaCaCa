@@ -1,0 +1,14 @@
+Payment received — thank you, {{ order.name }}.
+
+Order {{ order.number }}
+{% for line in order.items.all %}{{ line.name }} — {{ line.rod_id }} — ${{ line.line_total }}
+{% endfor %}
+Subtotal: ${{ order.subtotal }}
+Shipping: ${{ order.shipping }}
+Tax: ${{ order.tax }}
+Total paid: ${{ order.total }} {{ order.currency }}
+
+We will email you again when your order ships. Keep {{ order.number }} for your records.
+
+CaCaCa
+{% if store.contact_email %}{{ store.contact_email }}{% endif %}

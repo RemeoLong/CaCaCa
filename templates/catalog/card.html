@@ -1,0 +1,12 @@
+<article class="product-card">
+  <a href="{{ rod.get_absolute_url }}" class="product-image">
+    {% if rod.cover %}<img src="{{ rod.cover.image.url }}" alt="{{ rod.cover.alt_text }}" loading="lazy" width="600" height="600">
+    {% else %}<span class="no-photo">CáCáCá<small>Product photography coming soon</small></span>{% endif %}
+    <span class="badge">{% if rod.is_public_preview %}Design preview{% else %}{{ rod.get_status_display }}{% endif %}</span>
+  </a>
+  <div class="product-meta"><span>{{ rod.design_theme|default:rod.get_build_type_display }}</span><span>{{ rod.rod_id }}</span></div>
+  <h3><a href="{{ rod.get_absolute_url }}">{{ rod.name }}</a></h3>
+  <p>{% if rod.specification.length %}{{ rod.specification.length }}{% if rod.specification.power %} · {{ rod.specification.power }}{% endif %}{% if rod.specification.action %} · {{ rod.specification.action }}{% endif %}{% elif rod.is_public_preview %}Builder details being confirmed{% endif %}</p>
+  <div class="product-price">{% if rod.is_public_preview %}<span>Not for sale yet</span>{% else %}${{ rod.price }} <small>USD</small>{% endif %}<a href="{{ rod.get_absolute_url }}" aria-label="View {{ rod.name }}">View rod ↗</a></div>
+</article>
+
